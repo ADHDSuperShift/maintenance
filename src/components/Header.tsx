@@ -24,7 +24,7 @@ const Header: React.FC = () => {
         <div className="flex items-center justify-between h-16">
           <a href="#home" className="flex items-center gap-3">
             <img
-              src="/ChatGPT Image Oct 19, 2025, 11_32_32 AM.png"
+              src="/chatgpt.png"
               alt="Logo"
               className="h-8 w-8 md:h-9 md:w-9 select-none object-cover rounded"
             />

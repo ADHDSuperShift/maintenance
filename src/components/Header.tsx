@@ -22,9 +22,17 @@ const Header: React.FC = () => {
     <header className="sticky top-0 z-50 bg-brand-navy shadow-md">
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-16">
-          <div className="text-white font-bold text-xl">
-            Represent B&C
-          </div>
+          <a href="#home" className="flex items-center gap-3">
+            <img
+              src="/ChatGPT Image Oct 19, 2025, 11_32_32 AM.png"
+              alt="Logo"
+              className="h-8 w-8 md:h-9 md:w-9 select-none object-cover rounded"
+            />
+            <div className="text-white leading-tight">
+              <div className="font-bold text-xl">Represent</div>
+              <div className="text-xs md:text-sm lg:text-base text-white/90">Building & Construction</div>
+            </div>
+          </a>
           
           <nav className="hidden md:flex space-x-8">
             {navLinks.map((link) => (

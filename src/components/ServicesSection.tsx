@@ -1,9 +1,48 @@
-import React, { useRef } from 'react';
+import React, { useRef, useEffect, useCallback } from 'react';
 import { ChevronLeft, ChevronRight, Hammer, Wrench, Home, Droplets, Paintbrush, Trees, Flame, Waves } from 'lucide-react';
 import ServiceCard from './ServiceCard';
 
 const ServicesSection: React.FC = () => {
   const scrollRef = useRef<HTMLDivElement>(null);
+  const intervalRef = useRef<number | null>(null);
+
+  const startAutoScroll = useCallback(() => {
+    // Respect user preference for reduced motion
+    if (typeof window !== 'undefined' && window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      return;
+    }
+    if (intervalRef.current) return;
+    intervalRef.current = window.setInterval(() => {
+      const el = scrollRef.current;
+      if (!el) return;
+      const atEnd = el.scrollLeft + el.clientWidth >= el.scrollWidth - 2;
+      if (atEnd) {
+        el.scrollTo({ left: 0, behavior: 'smooth' });
+      } else {
+        el.scrollBy({ left: 300, behavior: 'smooth' });
+      }
+    }, 3500);
+  }, []);
+
+  const stopAutoScroll = useCallback(() => {
+    if (intervalRef.current) {
+      clearInterval(intervalRef.current);
+      intervalRef.current = null;
+    }
+  }, []);
+
+  useEffect(() => {
+    startAutoScroll();
+    const handleVisibility = () => {
+      if (document.hidden) stopAutoScroll();
+      else startAutoScroll();
+    };
+    document.addEventListener('visibilitychange', handleVisibility);
+    return () => {
+      stopAutoScroll();
+      document.removeEventListener('visibilitychange', handleVisibility);
+    };
+  }, [startAutoScroll, stopAutoScroll]);
 
   const scroll = (direction: 'left' | 'right') => {
     if (scrollRef.current) {
@@ -49,6 +88,10 @@ const ServicesSection: React.FC = () => {
           <div
             ref={scrollRef}
             className="flex gap-6 overflow-x-auto scrollbar-hide scroll-smooth pb-4"
+            onMouseEnter={stopAutoScroll}
+            onMouseLeave={startAutoScroll}
+            onTouchStart={stopAutoScroll}
+            onTouchEnd={startAutoScroll}
             style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
           >
             {services.map((service, index) => (
